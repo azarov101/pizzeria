@@ -30,8 +30,8 @@ export const openModalAction = () => dispatch => {
     const action = {type: ActionType.OPEN_MODAL, payload: { isModalOpen: true }};   
     dispatch(action);
 }
-export const closeModalAction = () => dispatch => {
-    const payload = { isModalOpen: false };
+export const closeModalAction = (orderFinished=false) => dispatch => {
+    const payload = { isModalOpen: false, orderFinished };
     const action = {type: ActionType.CLOSE_MODAL, payload };   
     dispatch(action);
 }
@@ -55,5 +55,10 @@ export const updateCurrentPizzaNumberToCartAction = item => dispatch => {
 
 export const addToppingsToCartAction = item => dispatch => {
     const action = { type: ActionType.ADD_TOPPINGS_TO_CART, payload: item };   
+    dispatch(action);
+}
+
+export const addDrinksToCartAction = item => dispatch => {
+    const action = { type: ActionType.ADD_DRINKS_TO_CART, payload: item };   
     dispatch(action);
 }
