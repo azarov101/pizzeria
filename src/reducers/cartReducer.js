@@ -3,15 +3,7 @@ import ActionType from '../actions/constants';
 const initialState = {
     isModalOpen: false,
     totalPrice: 0,
-    order: { 
-        // { 
-        //     numberOfPizzas: 0,
-        //     currentPizza: 0,
-        //     drinks: [ ],
-        //     pizzaDescription: { },
-        //     toppings: [ ]
-        // }, 
-    }
+    order: { }
 };
 
 export default (state = initialState, action) => {
@@ -25,7 +17,11 @@ export default (state = initialState, action) => {
             break;
 
         case ActionType.CLOSE_MODAL:
-            newState = initialState;
+            if (payload.orderFinished) {
+                newState = {...state, isModalOpen: payload.isModalOpen};
+            } else {
+                newState = initialState;
+            }
             break;
 
         case ActionType.ADD_PIZZA_TO_CART:
@@ -50,9 +46,16 @@ export default (state = initialState, action) => {
 
         case ActionType.ADD_TOPPINGS_TO_CART:
             index = payload.subOrderIndex;
-            updatedOrder = {[payload.toppingIndex]: payload.toppings }; // add the index of the toppings
+            updatedOrder = {[payload.itemsIndex]: payload.items }; // add the index of the toppings
             updatedOrder = { ...state.order[index].toppings , ...updatedOrder }; // add those toppings to state
             updatedOrder = { ...state.order[index] , toppings: updatedOrder }; // update toppings slice
+            newState = {...state, order: { ...state.order, [index]: updatedOrder}};
+            break;
+
+        case ActionType.ADD_DRINKS_TO_CART:
+            index = payload.subOrderIndex;
+            updatedOrder = Object.keys(payload.items).length > 0 ? { drinks: payload.items } : { drinks: {} };
+            updatedOrder = { ...state.order[index] , ...updatedOrder }; // add to drinks slice
             newState = {...state, order: { ...state.order, [index]: updatedOrder}};
             break;
             

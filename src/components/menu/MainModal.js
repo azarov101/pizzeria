@@ -5,6 +5,8 @@ import { Field, Form, reduxForm, reset } from 'redux-form';
 import _ from 'lodash';
 
 import * as Action from '../../actions';
+import ToppingsForm from './forms/ToppingsForm';
+import DrinksForm from './forms/DrinksForm';
 
 class MainModal extends Component{
     constructor(props){
@@ -15,62 +17,7 @@ class MainModal extends Component{
             step: 1
         };
     }
-
-    RenderFormInput = field => {
-        return (
-            <div className="ui slider checkbox">
-                <input 
-                    { ...field.input }
-                    type={field.type} 
-                     />
-                    <label>{ field.label }</label>
-          </div>
-          ); 
-      }
-
-    ChooseItemsForm = (items, stepStr) => {
-        const { numberOfPizzas, currentPizza } = this.props.cart.order[this.subOrderIndex];
-
-        return (
-            <Form className="ui form" onSubmit={this.props.handleSubmit((formValues, dispatch) => this.OnFormSubmit(formValues, dispatch, stepStr))}>
-            <Modal.Content>
-                <Header as='h4' block textAlign='center'>
-                    {this.props.cart.order[this.subOrderIndex] && 
-                        ((numberOfPizzas === 1 && `Choose ${stepStr} for the pizza`) ||
-                        (numberOfPizzas > 1 && `Choose ${stepStr} for Pizza #${currentPizza}`))
-                    }
-                </Header>    
-                <Card.Group itemsPerRow={4} textAlign="center" centered > 
-                    {items && items.map((item, index) => {
-                        
-                        return (
-                            <div className="column" key={index}>
-                            <Card fluid>
-                                <div style={{height: "100px"}}>
-                                    <img src={item.image} style={{ maxWidth: "100%", maxHeight: "100%", display: "block", margin: "0 auto", objectFit: "cover", height: "200px"}} />
-                                </div>
-                                <Card.Content>
-                                    <Card.Header>
-                                    <Field 
-                                        name={item.item}
-                                        label={item.item}
-                                        type="checkbox"
-                                        component={this.RenderFormInput}
-                                    />   
-                                    </Card.Header>
-                                </Card.Content>
-                            </Card>
-                        </div>
-                        );
-                    })}
-                </Card.Group>  
-            </Modal.Content>
-            <Modal.Actions style={{margin: "25px 12px 12px",  float: "right"}}>
-                <Button className="ui primary button">Next</Button>
-            </Modal.Actions>
-        </Form>
-        );
-    }
+    
 
     NumberOfPizzas = () => {
         return (
@@ -95,34 +42,45 @@ class MainModal extends Component{
         );
     }
 
-    OnFormSubmit = (formValues, dispatch, stepStr) => { 
-        debugger;
+    onToppingsFormSubmit = (formValues, dispatch) => { 
         let filteredValues = Object.keys(formValues).filter(val => formValues[val]); // take only the checked fields
+        filteredValues = this.props.toppings.filter(val => filteredValues.includes(val.item)); // map values to have all toppings info from store
+        filteredValues = _.mapValues(filteredValues); // convert array to object
+        
+        const toppingsIndex = this.props.cart.order[this.subOrderIndex].currentPizza;
 
-        filteredValues = this.props.toppings.filter(val => filteredValues.includes(val.item)); // map values to have all info from store
-        const toppingIndex = this.props.cart.order[this.subOrderIndex].currentPizza;
+        filteredValues = {
+            subOrderIndex: this.subOrderIndex,
+            itemsIndex: toppingsIndex,
+            items: { ...filteredValues }
+        };  
 
+        this.props.addToppingsToCartAction(filteredValues);
+
+        filteredValues = {
+            subOrderIndex: this.subOrderIndex,
+            index: toppingsIndex + 1,
+        };  
+        this.props.updateCurrentPizzaNumberToCartAction(filteredValues);
+
+        dispatch(reset("ToppingsForm")); // clear form fields 
+        this.HandleButtonClick();
+    };
+
+    onDrinksFormSubmit = (formValues, dispatch) => { 
+        let filteredValues = Object.keys(formValues).filter(val => formValues[val] > 0); // take only the fields that has at least 1 drink
+        filteredValues = this.props.drinks.filter(val => filteredValues.includes(val.item)); // map values to have all drinks info from store
+        filteredValues.map(val => val.amount = formValues[val.item]); // add order amount for each drink
         filteredValues = _.mapValues(filteredValues); // convert array to object
 
         filteredValues = {
             subOrderIndex: this.subOrderIndex,
-            toppingIndex: toppingIndex,
-            toppings: { ...filteredValues }
+            items: { ...filteredValues }
         };  
 
-        if (stepStr == "toppings"){
-            this.props.addToppingsToCartAction(filteredValues);
-        } else { // drinks
-            // this.props.addToppingsToCartAction(filteredValues);
-        }
+        this.props.addDrinksToCartAction(filteredValues);
 
-        filteredValues = {
-            subOrderIndex: this.subOrderIndex,
-            index: toppingIndex + 1,
-        };  
-        this.props.updateCurrentPizzaNumberToCartAction(filteredValues);
-
-        dispatch(reset("ItemsForm")); // clear form fields 
+        dispatch(reset("DrinksForm")); // clear form fields 
         this.HandleButtonClick();
     };
 
@@ -135,7 +93,7 @@ class MainModal extends Component{
         } 
         
         else if (this.state.step === 2){
-            debugger;
+            console.log("STEP 2 After 'NEXT'");
             const toppingIndex = this.props.cart.order[this.subOrderIndex].currentPizza;
 
             if (toppingIndex == this.state.pizzaAmount){ // done with all the toppings
@@ -155,11 +113,9 @@ class MainModal extends Component{
         } 
         
         else if (this.state.step === 3){
-            console.log("STEP 3");
+            this.props.closeModalAction(true);
+            this.setState({pizzaAmount: 1, step:  1}); // reset the state of step
         } 
-        else if (this.state.step === 4){
-            
-        }
     }
 
     ModalContent = () => {
@@ -167,9 +123,9 @@ class MainModal extends Component{
             case 1: 
                 return this.NumberOfPizzas();
             case 2: 
-                return this.ChooseItemsForm(this.props.toppings, "toppings");
+                return <ToppingsForm toppings={this.props.toppings} order={this.props.cart.order[this.subOrderIndex]} onToppingsFormSubmit={this.onToppingsFormSubmit} />
             case 3: 
-            return this.ChooseItemsForm(this.props.drinks, "drinks");
+                return <DrinksForm drinks={this.props.drinks} onDrinksFormSubmit={this.onDrinksFormSubmit} />
         }
     }
 
@@ -215,6 +171,8 @@ const mapStateToProps = state => {
 // }
 
 const formWrapper = connect(mapStateToProps, { ...Action })(MainModal);
-export default reduxForm({
-    form: 'ItemsForm'
-})(formWrapper);
+export default formWrapper;
+// export default reduxForm({
+//     form: 'ToppingsForm',
+//     form: 'DrinksForm',
+// })(formWrapper);
