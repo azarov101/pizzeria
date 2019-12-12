@@ -28,7 +28,7 @@ class Menu extends Component {
         <div className="ui four column grid">
             {this.props.menu && this.props.menu.map((item, index) => {
                 return(
-                    <div className="column" key={index}>
+                    <div className="column col-sm-12" key={index}>
                         <Card onClick={() => this.pizzaClickHandler(item)}>
                             <div style={{height: "200px"}}>
                                 <img src={item.image} style={{ maxWidth: "100%", maxHeight: "100%", display: "block", margin: "0 auto", objectFit: "cover", height: "200px"}} />
