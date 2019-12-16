@@ -19,7 +19,7 @@ class OrderDetails extends Component {
                         <h2 className="header">{orderItems.pizzaDescription.item}</h2>
                     </div>
                 </div>
-                
+                <br />
                 <div className="ui grid"> 
                     <div role="list" className="six wide column ui list">  
                         <div role="listitem" className="item">
@@ -97,29 +97,60 @@ class OrderDetails extends Component {
         );
     }
 
+    orderInformation = () => {
+        const { id, name, price, status, location, notes } = this.props.order;
+
+        return (
+            <div role="list" className="ui divided middle aligned list">
+                <div role="listitem" className="item">
+                    <i className="key icon"></i>
+                    <div className="content"><b>Order ID: </b>#{id}</div>
+                </div>
+                <div role="listitem" className="item">
+                    <i className="user circle icon"></i>
+                    <div className="content"><b>Order Name: </b>{name}</div>
+                </div>
+                <div role="listitem" className="item">
+                    <i className="money bill alternate icon"></i>
+                    <div className="content"><b>Price: </b>{price}$</div>
+                </div>
+                <div role="listitem" className="item">
+                    <i className="bell icon"></i>
+                    <div className="content"><b>Status: </b>{status}</div>
+                </div>
+                <div role="listitem" className="item">
+                    <i className="shipping fast icon"></i>
+                    <div className="content"><b>Delivery Location: </b>{location}</div>
+                </div>
+                {notes && 
+                <div role="listitem" className="item">
+                    <i className="info circle icon"></i>
+                    <div className="content">
+                        <div className="header">Order Notes:</div>
+                        <div className="description">{notes}</div>
+                    </div>
+                </div>
+                }
+            </div>         
+        );
+    }
+
     showOrderDetails = () => {
-        const {location, items, notes, status} = this.props.order;
-        debugger;
+        const { items } = this.props.order;
         return (
             <React.Fragment>
-                <div className="ui grid">
-                    <div className="row">
-                        {/* name, location, status, id, notes, total price */}
-                        <div className="four wide column">
-                        </div>
-                        <div className="four wide column">
-                        </div>
-                        <div className="four wide column">
-                        </div>
-                        <div className="four wide column">
-                        </div>
-                    </div>
+                <br />
+                <center><h1>THANK YOU!</h1></center>
+                <br />
 
-                    <h1>Order Details</h1>
+                {this.orderInformation()}
+                
+                <h4>Order Details</h4>
+                <div className="ui grid">
                     {Object.values(items).map((orderItems, index) => (
-                        <div className="row" key={index}>
+                        <div className="row ui very padded segment" key={index}>
                             <div className="four wide column">
-                                <img src={orderItems.pizzaDescription.image} className="ui image" />
+                                <img alt="pizza" src={orderItems.pizzaDescription.image} className="ui image" />
                             </div>
                             <div className="twelve wide column">
                                 {this.orderContent(orderItems)}

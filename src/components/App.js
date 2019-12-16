@@ -6,6 +6,7 @@ import Menu from './menu/Menu';
 import NavBar from './NavBar';
 import OrderCreate from './order/OrderCreate';
 import OrderDetails from './order/OrderDetails';
+import OrderSearch from './order/OrderSearch';
 
 function App() {
     return(
@@ -17,6 +18,7 @@ function App() {
                 <Route path="/" exact component={Home} />
                 <Route path="/menu" exact component={Menu} />
                 <Route path="/order/create" exact component={OrderCreate} />
+                <Route path="/order" exact component={OrderSearch} />
                 <Route path="/order/:id" exact component={OrderDetails} />
             </Switch>
         </BrowserRouter>
