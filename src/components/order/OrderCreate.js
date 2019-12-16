@@ -14,17 +14,28 @@ class OrderCreate extends Component {
         this.props.getCityAction();
     }
 
+    componentWillUnmount(){
+        clearInterval(this.state.interval);
+    }
+
     onSubmit = formValues => {
-        debugger;
-        const items = {...this.props.cart.order};
+        const { order: items, totalPrice} = this.props.cart;
+
         const order = {
             name: formValues.fullName,
+            price: totalPrice,
             location: `${formValues.city}, ${formValues.street} ${formValues.number}`,
             notes: formValues.notes,
             status: "Delivered",
             items: items
         };
         this.props.createOrderAction(order);
+
+        // set interval for 2 seconds before redirect to order page
+        let interval = setInterval(() => {
+                this.props.history.push(`/order/${Object.keys(this.props.order)}`)
+            }, 2000);
+        this.setState({interval: interval});
     }
 
     renderFormInput = field => {
@@ -76,7 +87,7 @@ class OrderCreate extends Component {
         return (
             <React.Fragment>
                 <div style={{margin: "0 auto", textAlign: "center"}}>                
-                    <img  src={deliveryImage} style={{width: "50%"}} />
+                    <img alt="delivery" src={deliveryImage} style={{width: "50%"}} />
                 </div>
                 <h1 style={{textAlign: "center"}}>Enter Your Details</h1>
                 <br />
@@ -139,7 +150,7 @@ class OrderCreate extends Component {
     }
 
     render(){
-        const { order ,totalPrice } = this.props.cart;
+        const { order } = this.props.cart;
 
         // no orders in cart
         if (Object.keys(order).length === 0) {
@@ -147,10 +158,10 @@ class OrderCreate extends Component {
         }
         
         // loading cities
-        if (this.props.city.length == 0) {
+        if (this.props.city.length === 0) {
             return (
                 <div className="ui active transition visible inverted dimmer">
-                    <div className="content"><div class="ui medium text loader">Loading Cities</div></div>
+                    <div className="content"><div className="ui medium text loader">Loading Cities</div></div>
                 </div>
             );
         }
@@ -159,8 +170,7 @@ class OrderCreate extends Component {
         if (Object.values(this.props.order).length === 1){
             return (
                 <div className="ui active transition visible inverted dimmer">
-                    <div className="content"><div class="ui medium text loader">Order was completed successfully - Redirect to order page</div></div>
-                    {this.props.history.push(`/order/${Object.keys(this.props.order)}`)}
+                    <div className="content"><div className="ui medium text loader">Order was completed successfully - Redirect to order page</div></div>
                 </div>
             );
         }

@@ -10,7 +10,6 @@ export default (state={}, action) => {
             newState = {};
             break;
         case ActionType.GET_ORDER_LIST:
-            debugger;
             newState = { ...state, ..._.mapKeys(payload, "id") };
             break;
         case ActionType.GET_ORDER:

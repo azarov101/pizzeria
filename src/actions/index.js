@@ -77,6 +77,11 @@ export const addDrinksToCartAction = item => dispatch => {
     dispatch(action);
 }
 
+export const updateTotalPriceAction = price => dispatch => {
+    const action = { type: ActionType.UPDATE_TOTAL_PRICE, payload: price };
+    dispatch(action);
+}
+
 // // order
 // export const getCartAction = () => dispatch => {
 //     const action = {type: ActionType.GET_CART, payload: { isModalOpen: true }};   
