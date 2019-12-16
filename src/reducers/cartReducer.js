@@ -12,6 +12,10 @@ export default (state = initialState, action) => {
     let index, updatedOrder; // helper variables
 
     switch (type) {
+        case ActionType.INITIALIZE_STATE:
+            newState = initialState;
+            break;
+
         case ActionType.OPEN_MODAL:
             newState = {...state, ...payload};
             break;

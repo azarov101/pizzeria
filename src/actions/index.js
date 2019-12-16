@@ -9,11 +9,25 @@ export const getMenuAction = () => async dispatch => {
     dispatch({ type: ActionType.GET_MENU_LIST, payload: response.data });
 };
 
+// GET List of cities
+export const getCityAction = () => async dispatch => {
+    const response = await api.get("/city");
+
+    dispatch({ type: ActionType.GET_CITY_LIST, payload: response.data });
+};
+
 // GET Order by id
 export const getOrderAction = id => async dispatch => {
     const response = await api.get(`/order/${id}`);
 
     dispatch({ type: ActionType.GET_ORDER, payload: response.data });
+};
+
+// GET List of all the orders
+export const getOrderListAction = () => async dispatch => {
+    const response = await api.get("/order");
+
+    dispatch({ type: ActionType.GET_ORDER_LIST, payload: response.data });
 };
 
 // POST new Order
@@ -60,5 +74,16 @@ export const addToppingsToCartAction = item => dispatch => {
 
 export const addDrinksToCartAction = item => dispatch => {
     const action = { type: ActionType.ADD_DRINKS_TO_CART, payload: item };   
+    dispatch(action);
+}
+
+// // order
+// export const getCartAction = () => dispatch => {
+//     const action = {type: ActionType.GET_CART, payload: { isModalOpen: true }};   
+//     dispatch(action);
+// }
+
+export const initializeOrderStateAction = () => dispatch => {
+    const action = {type: ActionType.INITIALIZE_STATE, payload: null };
     dispatch(action);
 }

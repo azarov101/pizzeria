@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import ActionType from '../actions/constants';
 
 export default (state={}, action) => {
@@ -5,6 +6,13 @@ export default (state={}, action) => {
     let newState;
 
     switch (type){
+        case ActionType.INITIALIZE_STATE:
+            newState = {};
+            break;
+        case ActionType.GET_ORDER_LIST:
+            debugger;
+            newState = { ...state, ..._.mapKeys(payload, "id") };
+            break;
         case ActionType.GET_ORDER:
             newState = { ...state, [payload.id]: payload };
             break;

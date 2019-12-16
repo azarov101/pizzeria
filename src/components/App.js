@@ -4,6 +4,8 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Home from './Home';
 import Menu from './menu/Menu';
 import NavBar from './NavBar';
+import OrderCreate from './order/OrderCreate';
+import OrderDetails from './order/OrderDetails';
 
 function App() {
     return(
@@ -14,6 +16,8 @@ function App() {
             <Switch>
                 <Route path="/" exact component={Home} />
                 <Route path="/menu" exact component={Menu} />
+                <Route path="/order/create" exact component={OrderCreate} />
+                <Route path="/order/:id" exact component={OrderDetails} />
             </Switch>
         </BrowserRouter>
         </div>
