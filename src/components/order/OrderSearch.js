@@ -1,12 +1,37 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Divider, Grid, Segment, Input, Icon, Menu, Table } from 'semantic-ui-react'
+import { Divider, Grid, Segment, Input, Icon, Table } from 'semantic-ui-react';
+import { Field, change, reduxForm } from 'redux-form';
 
 import * as Action from '../../actions';
 
 class OrderSearch extends Component{
+    state = { showAllOrders: false }
+
     componentDidMount(){
         this.props.getOrderListAction();
+    }
+    
+    renderFormInput = field => {
+        return (
+            <div className="ui icon input">
+                <input
+                    { ...field.input }
+                    type = { field.type } 
+                    placeholder = { field.placeholder }
+                    autoFocus
+                    autoComplete = "off"
+                    style={{width: "350px"}}
+                    onFocus={() => this.setState({showAllOrders: false})}
+                />
+                <Icon name='search' inverted circular link />
+          </div>
+          ); 
+    }
+
+    handleClickButton = () => {
+        this.props.change(this.props.form, "search", ""); // reset form field value
+        this.setState({ showAllOrders: true});
     }
 
     searchComponent = () => {
@@ -14,14 +39,15 @@ class OrderSearch extends Component{
             <Segment textAlign="center" padded="very">
             <Grid columns={2} relaxed='very'>
                 <Grid.Column>
-                    <Input
-                        icon={<Icon name='search' inverted circular link />}
-                        placeholder='Search By Order ID #'
-                        fluid focus
+                    <Field
+                        name="search"
+                        type="text"
+                        placeholder="Search By Order ID #"
+                        component={this.renderFormInput}
                     />
                 </Grid.Column>
                 <Grid.Column verticalAlign='middle'>
-                    <button className="primary ui button"><i className="clipboard list icon"></i>Show all orders</button>
+                    <button className="primary ui button" onClick={this.handleClickButton}><i className="clipboard list icon"></i>Show all orders</button>
                 </Grid.Column>
             </Grid>
         
@@ -31,9 +57,13 @@ class OrderSearch extends Component{
     }
 
     tableComponent = () => {
-        const { order: orders } = this.props;
-        // console.log(orders);
+        const { order, formProps: form } = this.props;
+        let orders =  [ ...order ];
 
+        if (form.values) { // search by id
+            orders = orders.filter(order => order.id.toString().startsWith(form.values.search));
+        }
+ 
         return (
             <Table celled>
                 <Table.Header>
@@ -46,8 +76,8 @@ class OrderSearch extends Component{
                 </Table.Header>
             
                 <Table.Body>
-                    {orders && orders.map((order, index) => (
-                        <Table.Row key={index}>
+                    {orders && orders.map((order) => (
+                        <Table.Row key={order.id} onClick={() => this.props.history.push(`/order/${order.id}`)}>
                             <Table.Cell>{order.id}</Table.Cell>
                             <Table.Cell>{order.name}</Table.Cell>
                             <Table.Cell>{order.price}$</Table.Cell>
@@ -72,14 +102,21 @@ class OrderSearch extends Component{
                 <center><h1>Search Your Order</h1></center>
                 {this.searchComponent()}
                 <br />
-                {this.tableComponent()}
+                {(this.state.showAllOrders || (this.props.formProps && this.props.formProps.values)) && this.tableComponent()}
             </div>
         );
     }
 }
 
-const mapStateToProps = state => {
-    return { order: Object.values(state.order) };
+const mapStateToProps = (state, ownProps) => {
+    return { 
+        order: Object.values(state.order),
+        formProps: state.form[ownProps.form]
+    };
 }
 
-export default connect(mapStateToProps, { ...Action })(OrderSearch);
+const formWrapper = connect(mapStateToProps, { ...Action, change })(OrderSearch);
+
+export default reduxForm({
+    form: 'SearchOrderByIdForm',
+})(formWrapper);
