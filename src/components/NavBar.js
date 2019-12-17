@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, Image } from 'semantic-ui-react'
+import { Menu } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
 
 function NavBar() {
@@ -7,7 +7,7 @@ function NavBar() {
         <div>
             <Menu stackable fluid widths={4}>
                 <Menu.Item>
-                    <h2 className="ui center aligned icon"> <Link to="/"><i className=" home icon"></i></Link> </h2>
+                    <h2 className="ui center aligned icon"> <Link to="/"><i className="home icon"></i></Link> </h2>
                 </Menu.Item>
 
                 <Menu.Item name="menu">
@@ -15,7 +15,7 @@ function NavBar() {
                 </Menu.Item>
 
                 <Menu.Item name="order" >
-                    Order
+                    <Link to="/order">Order</Link>
                 </Menu.Item>
 
                 <Menu.Item name="about" >

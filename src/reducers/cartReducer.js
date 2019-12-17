@@ -12,6 +12,10 @@ export default (state = initialState, action) => {
     let index, updatedOrder; // helper variables
 
     switch (type) {
+        case ActionType.INITIALIZE_STATE:
+            newState = initialState;
+            break;
+
         case ActionType.OPEN_MODAL:
             newState = {...state, ...payload};
             break;
@@ -20,7 +24,14 @@ export default (state = initialState, action) => {
             if (payload.orderFinished) {
                 newState = {...state, isModalOpen: payload.isModalOpen};
             } else {
-                newState = initialState;
+                if (state.totalPrice !== 0){ // clear current order only
+                    updatedOrder = { ...state.order };
+                    delete updatedOrder[Object.keys(updatedOrder).length];
+                    updatedOrder = { ...state, order: { ...updatedOrder }, isModalOpen: payload.isModalOpen }
+                    newState = { ...state, ...updatedOrder }
+                } else {
+                    newState = initialState;
+                }
             }
             break;
 
@@ -57,6 +68,10 @@ export default (state = initialState, action) => {
             updatedOrder = Object.keys(payload.items).length > 0 ? { drinks: payload.items } : { drinks: {} };
             updatedOrder = { ...state.order[index] , ...updatedOrder }; // add to drinks slice
             newState = {...state, order: { ...state.order, [index]: updatedOrder}};
+            break;
+
+        case ActionType.UPDATE_TOTAL_PRICE:
+            newState = {...state, totalPrice: payload};
             break;
             
         default:

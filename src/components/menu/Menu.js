@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { Image, Card } from 'semantic-ui-react';
+import { Card } from 'semantic-ui-react';
 import _ from 'lodash';
+import { Link } from 'react-router-dom';
 
 import * as Action from '../../actions';
 import MainModal from './MainModal';
-
 
 class Menu extends Component {
     constructor(props){
@@ -15,6 +15,7 @@ class Menu extends Component {
 
     componentDidMount(){
         this.props.getMenuAction();
+        this.props.initializeOrderStateAction();
     }
 
     pizzaClickHandler = item => {
@@ -31,7 +32,11 @@ class Menu extends Component {
                     <div className="column col-sm-12" key={index}>
                         <Card onClick={() => this.pizzaClickHandler(item)}>
                             <div style={{height: "200px"}}>
-                                <img src={item.image} style={{ maxWidth: "100%", maxHeight: "100%", display: "block", margin: "0 auto", objectFit: "cover", height: "200px"}} />
+                                <img 
+                                    src={item.image}
+                                    alt="pizza"
+                                    style={{ maxWidth: "100%", maxHeight: "100%", display: "block", margin: "0 auto", objectFit: "cover", height: "200px"}}
+                                />
                             </div>
                             <Card.Content>
                                 <Card.Header>{item.item}</Card.Header>
@@ -48,10 +53,22 @@ class Menu extends Component {
                             </Card.Content>
                         </Card>
                     </div>
+                    
                 );
             })}
         </div>
     )
+
+    orderButton = () => {
+        if (Object.keys(this.props.cart.order).length > 0) {
+            return (
+                <div>
+                    <br/>
+                    <Link className="ui fluid primary button" to="/order/create">Order Now</Link>
+                </div>
+            );
+        }
+    }
 
     render() {
         return (
@@ -62,6 +79,7 @@ class Menu extends Component {
                 </h2>
                 {this.PizzaMenu()}
                 <MainModal />
+                {this.orderButton()}
             </div>
         );
     }

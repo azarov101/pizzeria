@@ -38,7 +38,11 @@ function ToppingsForm(props) {
                                 <div className="column" key={index}>
                                 <Card fluid>
                                     <div style={{height: "100px"}}>
-                                        <img src={item.image} style={{ maxWidth: "100%", maxHeight: "100%", display: "block", margin: "0 auto", objectFit: "cover", height: "200px"}} />
+                                        <img 
+                                            src={item.image} 
+                                            alt="topping" 
+                                            style={{ maxWidth: "100%", maxHeight: "100%", display: "block", margin: "0 auto", objectFit: "cover", height: "200px"}}
+                                        />
                                     </div>
                                     <Card.Content>
                                         <Card.Header>
