@@ -2,9 +2,7 @@
 import ActionType from '../actions/constants';
 
 const initialState = {
-    drinks: [],
-    pizzas: [],
-    toppings: []
+    city: []
 };
 
 export default (state = initialState, action) => {
@@ -12,8 +10,8 @@ export default (state = initialState, action) => {
     let newState;
 
     switch (type) {
-        case ActionType.GET_MENU_LIST:
-            newState = {...state, ...payload};
+        case ActionType.GET_CITY_LIST:
+            newState = { ...state, city: payload };
             break;
         default:
             newState = state;
