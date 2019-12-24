@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 function NavBar() {
     return(
-        <div>
+        <React.Fragment>
             <Menu stackable fluid widths={4}>
                 <Menu.Item>
                     <h2 className="ui center aligned icon"> <Link to="/"><i className="home icon"></i></Link> </h2>
@@ -22,7 +22,7 @@ function NavBar() {
                     About
                 </Menu.Item>
             </Menu>
-        </div>
+        </React.Fragment>
     );
 }
 

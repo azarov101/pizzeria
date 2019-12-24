@@ -25,12 +25,12 @@ class OrderDetails extends Component {
                         <div role="listitem" className="item">
                             <i aria-hidden="true" className="marker icon"></i>
                             <div className="content">
-                                <h4 className="header" style={{color: "#4183C4"}}>Price</h4>
+                                <h4 className="header headerColor">Price</h4>
                                 <div className="description">
                                     {orderItems.pizzaDescription.discountedPrice && 
                                     <div>Discounted Price: 
                                         &nbsp; &nbsp;
-                                    <span style={{textDecoration: "line-through"}}> {orderItems.pizzaDescription.price} </span> &nbsp; => &nbsp; {orderItems.pizzaDescription.discountedPrice}$ </div> }
+                                    <span className="lineThrough"> {orderItems.pizzaDescription.price} </span> &nbsp; => &nbsp; {orderItems.pizzaDescription.discountedPrice}$ </div> }
                                     {!orderItems.pizzaDescription.discountedPrice && orderItems.pizzaDescription.price + `$`}
                                 </div>
                             </div>
@@ -39,7 +39,7 @@ class OrderDetails extends Component {
                         <div role="listitem" className="item">
                             <i aria-hidden="true" className="marker icon"></i>
                             <div className="content">
-                                <h4 className="header" style={{color: "#4183C4"}}>Amount</h4>
+                                <h4 className="header headerColor">Amount</h4>
                                 <div className="description">
                                     {orderItems.numberOfPizzas}
                                 </div>
@@ -52,7 +52,7 @@ class OrderDetails extends Component {
                             <div role="listitem" className="item">
                                 <i aria-hidden="true" className="marker icon"></i>
                                 <div className="content">
-                                    <h4 className="header" style={{color: "#4183C4"}}>Toppings</h4>
+                                    <h4 className="header headerColor">Toppings</h4>
                                     <div className="description">
                                         {Object.values(orderItems.toppings).map((toppings, pizzaIndex) => { 
                                             let numOfToppings = Object.values(toppings).length;
@@ -79,7 +79,7 @@ class OrderDetails extends Component {
                             <div role="listitem" className="item">
                                 <i aria-hidden="true" className="marker icon"></i>
                                 <div className="content">
-                                    <h4 className="header" style={{color: "#4183C4"}}>Drinks</h4>
+                                    <h4 className="header headerColor">Drinks</h4>
                                     <div className="description">
                                         {Object.values(orderItems.drinks).length === 0 && 
                                             <li>No drinks</li>
@@ -103,29 +103,29 @@ class OrderDetails extends Component {
         return (
             <div role="list" className="ui divided middle aligned list">
                 <div role="listitem" className="item">
-                    <i className="key icon"></i>
-                    <div className="content"><b>Order ID: </b>#{id}</div>
+                    <div className="iconWidth inlineBlock"><i className="key icon"></i></div>
+                    <div className="content inlineBlock"><b>Order ID: </b>#{id}</div>
                 </div>
                 <div role="listitem" className="item">
-                    <i className="user circle icon"></i>
-                    <div className="content"><b>Order Name: </b>{name}</div>
+                    <div className="iconWidth inlineBlock"><i className="user circle icon"></i></div>
+                    <div className="content inlineBlock"><b>Order Name: </b>{name}</div>
                 </div>
                 <div role="listitem" className="item">
-                    <i className="money bill alternate icon"></i>
-                    <div className="content"><b>Price: </b>{price}$</div>
+                    <div className="iconWidth inlineBlock"><i className="money bill alternate icon"></i></div>
+                    <div className="content inlineBlock"><b>Price: </b>{price}$</div>
                 </div>
                 <div role="listitem" className="item">
-                    <i className="bell icon"></i>
-                    <div className="content"><b>Status: </b>{status}</div>
+                    <div className="iconWidth inlineBlock"><i className="bell icon"></i></div>
+                    <div className="content inlineBlock"><b>Status: </b>{status}</div>
                 </div>
                 <div role="listitem" className="item">
-                    <i className="shipping fast icon"></i>
-                    <div className="content"><b>Delivery Location: </b>{location}</div>
+                    <div className="iconWidth inlineBlock"> <i className="shipping fast icon"></i></div>
+                    <div className="content inlineBlock"><b>Delivery Location: </b></div><div className="inlineBlock breakWord">{location}</div>
                 </div>
                 {notes && 
                 <div role="listitem" className="item">
-                    <i className="info circle icon"></i>
-                    <div className="content">
+                    <div className="iconWidth inlineBlock"><i className="info circle icon"></i></div>
+                    <div className="content inlineBlock">
                         <div className="header">Order Notes:</div>
                         <div className="description">{notes}</div>
                     </div>
@@ -148,7 +148,7 @@ class OrderDetails extends Component {
                 <h4>Order Details</h4>
                 <div className="ui grid">
                     {Object.values(items).map((orderItems, index) => (
-                        <div className="row ui very padded segment" key={index}>
+                        <div className="row ui very padded segment doubling stackable" key={index}>
                             <div className="four wide column">
                                 <img alt="pizza" src={orderItems.pizzaDescription.image} className="ui image" />
                             </div>

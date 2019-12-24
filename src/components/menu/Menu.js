@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import { Card } from 'semantic-ui-react';
+import { Card, Icon } from 'semantic-ui-react';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 
@@ -26,18 +26,14 @@ class Menu extends Component {
     }
 
     PizzaMenu = () => (
-        <div className="ui four column grid">
+        <div className="ui doubling stackable verticalAlign centered four column grid">
             {this.props.menu && this.props.menu.map((item, index) => {
                 return(
-                    <div className="column col-sm-12" key={index}>
-                        <Card onClick={() => this.pizzaClickHandler(item)}>
-                            <div style={{height: "200px"}}>
-                                <img 
-                                    src={item.image}
-                                    alt="pizza"
-                                    style={{ maxWidth: "100%", maxHeight: "100%", display: "block", margin: "0 auto", objectFit: "cover", height: "200px"}}
-                                />
-                            </div>
+                    <div className="column" key={index}>
+                        <Card className="pizzaCard" fluid onClick={() => this.pizzaClickHandler(item)}>
+                            <React.Fragment>
+                                <img alt="pizza" src={item.image} />
+                            </React.Fragment>
                             <Card.Content>
                                 <Card.Header>{item.item}</Card.Header>
                                 {item.discountedPrice && 
@@ -49,11 +45,26 @@ class Menu extends Component {
                                     Some Description about the Pizza, the origin of the ingredients, what topping does it include
                                 </Card.Description>
                             </Card.Content>
-                            <Card.Content extra>
+                            <Card.Content extra textAlign="center">                    
+                                <span className="price">
+                                    Price:
+                                </span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <span>  
+                                    {item.discountedPrice &&      
+                                        <React.Fragment>                                     
+                                            <span className="lineThrough"> {item.price} </span>
+                                            <Icon name='angle double right' />
+                                            {item.discountedPrice}
+                                        </React.Fragment>
+                                    }
+                                    { !item.discountedPrice && item.price }
+                                    <Icon name='dollar sign' />
+                                
+                                </span>
                             </Card.Content>
                         </Card>
                     </div>
-                    
                 );
             })}
         </div>
@@ -86,7 +97,6 @@ class Menu extends Component {
 }
 
 const mapStateToProps = state => {
-    // debugger;
     return { 
         menu: state.menu.pizzas,
         cart: state.cart

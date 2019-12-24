@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Divider, Grid, Segment, Input, Icon, Table } from 'semantic-ui-react';
+import { Divider, Grid, Segment, Icon, Table } from 'semantic-ui-react';
 import { Field, change, reduxForm } from 'redux-form';
 
 import * as Action from '../../actions';
@@ -17,11 +17,11 @@ class OrderSearch extends Component{
             <div className="ui icon input">
                 <input
                     { ...field.input }
+                    className={field.className}
                     type = { field.type } 
                     placeholder = { field.placeholder }
                     autoFocus
                     autoComplete = "off"
-                    style={{width: "350px"}}
                     onFocus={() => this.setState({showAllOrders: false})}
                 />
                 <Icon name='search' inverted circular link />
@@ -42,6 +42,7 @@ class OrderSearch extends Component{
                     <Field
                         name="search"
                         type="text"
+                        className="searchOrderField"
                         placeholder="Search By Order ID #"
                         component={this.renderFormInput}
                     />
@@ -77,7 +78,7 @@ class OrderSearch extends Component{
             
                 <Table.Body>
                     {orders && orders.map((order) => (
-                        <Table.Row key={order.id} onClick={() => this.props.history.push(`/order/${order.id}`)}>
+                        <Table.Row className="orderRow" key={order.id} onClick={() => this.props.history.push(`/order/${order.id}`)}>
                             <Table.Cell>{order.id}</Table.Cell>
                             <Table.Cell>{order.name}</Table.Cell>
                             <Table.Cell>{order.price}$</Table.Cell>

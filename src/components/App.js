@@ -7,6 +7,7 @@ import NavBar from './NavBar';
 import OrderCreate from './order/OrderCreate';
 import OrderDetails from './order/OrderDetails';
 import OrderSearch from './order/OrderSearch';
+import '../style/style.css';
 
 function App() {
     return(

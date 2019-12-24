@@ -15,7 +15,9 @@ class OrderCreate extends Component {
     }
 
     componentWillUnmount(){
-        clearInterval(this.state.interval);
+        if (this.state && this.state.interval){
+            clearInterval(this.state.interval);
+        }
     }
 
     onSubmit = formValues => {
@@ -58,13 +60,13 @@ class OrderCreate extends Component {
         return (
             <React.Fragment>
                 <label>{ field.label }</label>
-                    <DropdownList  
-                        { ...field.input }
-                        placeholder={field.placeholder}
-                        data={field.data}
-                        />
-          </React.Fragment>
-          );
+                <DropdownList  
+                    { ...field.input }
+                    placeholder={field.placeholder}
+                    data={field.data}
+                />
+            </React.Fragment>
+        );
     }
 
     renderFormTextArea = field => {
@@ -86,10 +88,10 @@ class OrderCreate extends Component {
     showForm = () => {
         return (
             <React.Fragment>
-                <div style={{margin: "0 auto", textAlign: "center"}}>                
-                    <img alt="delivery" src={deliveryImage} style={{width: "50%"}} />
+                <div className="centerText">                
+                    <img alt="delivery" className="deliveryImage" src={deliveryImage} />
                 </div>
-                <h1 style={{textAlign: "center"}}>Enter Your Details</h1>
+                <h1 className="centerText">Enter Your Details</h1>
                 <br />
                 <Form className="ui form" onSubmit={this.props.handleSubmit(this.onSubmit)}>
                     <div className="fields">
