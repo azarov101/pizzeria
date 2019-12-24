@@ -1,13 +1,14 @@
 import React from 'react';
 
+import '../style/style.css';
 import pizzaImage from '../images/pizza1.png'
 
 function Home() {
     return(
-    <div>
-        <img alt="pizza cover" src={pizzaImage} style={{width: "100%"}} />
-        <h1 style={{textAlign: "center"}} >Mitzpe Ramon Pizzeria</h1>
-    </div>
+    <React.Fragment>
+        <img alt="pizza cover" className="coverImage" src={pizzaImage} />
+        <center><h1>Mitzpe Ramon Pizzeria</h1></center>
+    </React.Fragment>
     );
 }
 
