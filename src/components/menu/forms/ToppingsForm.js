@@ -2,8 +2,8 @@ import React from 'react';
 import { Modal, Header, Button, Card } from 'semantic-ui-react';
 import { Field, Form, reduxForm } from 'redux-form';
 
-function ToppingsForm(props) {
-    const {toppings, order, onToppingsFormSubmit} = props;
+const ToppingsForm = (props) => {
+    const {toppings, order, onToppingsFormSubmit, handleSubmit} = props;
 
     const onSubmit = (formValues, dispatch) => {
         onToppingsFormSubmit(formValues, dispatch);
@@ -21,9 +21,32 @@ function ToppingsForm(props) {
           ); 
     }
 
+    const card = (item) => {
+        return (
+            <Card fluid>
+                <img
+                    className="toppingImage"
+                    alt={item.item} 
+                    src={item.image} 
+                />
+                <Card.Content className="centerText modalCardPadding">
+                    <Card.Header>
+                        <Field 
+                            name={item.item}
+                            label={item.item}
+                            type="checkbox"
+                            component={renderFormInput}
+                        />   
+                        <div className="modalPrice">Price: <i className="dollar sign icon currencyPadding"></i>{item.price}</div>
+                    </Card.Header>
+                </Card.Content>
+            </Card>
+        );
+    }
+
     const toppingsForm = () => {
-        return(
-            <Form className="ui form" onSubmit={props.handleSubmit((formValues, dispatch) => onSubmit(formValues, dispatch))}>
+        return (
+            <Form className="ui form" onSubmit={handleSubmit((formValues, dispatch) => onSubmit(formValues, dispatch))}>
                 <Modal.Content>
                     <Header as='h3' block textAlign='center'>
                         {order && 
@@ -33,28 +56,10 @@ function ToppingsForm(props) {
                     </Header>    
                     <div className="ui doubling stackable centered four column grid cardGroup">
                         {toppings && toppings.map((item, index) => {
-                            
                             return (
                                 <div className="column" key={index}>
-                                <Card fluid>
-                                    <img
-                                        className="toppingImage"
-                                        alt={item.item} 
-                                        src={item.image} 
-                                    />
-                                    <Card.Content className="centerText modalCardPadding">
-                                        <Card.Header>
-                                            <Field 
-                                                name={item.item}
-                                                label={item.item}
-                                                type="checkbox"
-                                                component={renderFormInput}
-                                            />   
-                                            <div className="modalPrice">Price: <i className="dollar sign icon currencyPadding"></i>{item.price}</div>
-                                        </Card.Header>
-                                    </Card.Content>
-                                </Card>
-                            </div>
+                                    {card(item)}
+                                </div>
                             );
                         })}
                     </div>  
@@ -64,7 +69,6 @@ function ToppingsForm(props) {
                 </Modal.Actions>
             </Form>
         );
-
     }
 
     return(

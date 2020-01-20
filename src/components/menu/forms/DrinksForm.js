@@ -5,72 +5,82 @@ import { Modal, Header, Button, Card } from 'semantic-ui-react';
 
 import NumberInputField from '../../common/NumberInputField';
 
-class DrinksForm extends React.Component{
-    constructor(props){
-        super(props);
-        this.min = 0;
-        this.max = 10;
+const DrinksForm = (props) => {
+    const {drinks, onDrinksFormSubmit, handleSubmit, formProps, form, change} = props;
+    const min = 0;
+    const max = 10;
+    
+
+    const onSubmit = (formValues, dispatch) => {
+        onDrinksFormSubmit(formValues, dispatch);
     }
 
-    onSubmit = (formValues, dispatch) => {
-        this.props.onDrinksFormSubmit(formValues, dispatch);
-    }
-
-    minus = (name) => {
-        const currentVal = this.props.formProps.values[name];
-        if (currentVal > this.min) {
-            this.props.change(this.props.form, name, currentVal - 1 ); // decrease value by 1
+    const minus = (name) => {
+        const currentVal = formProps.values[name];
+        if (currentVal > min) {
+            change(form, name, currentVal - 1); // decrease value by 1
         }
     }
 
-    plus = (name) => {
-        const currentVal = this.props.formProps.values[name];
-        if (currentVal < this.max) {
-            this.props.change(this.props.form, name, currentVal + 1 ); // increase value by 1
+    const plus = (name) => {
+        const currentVal = formProps.values[name];
+        if (currentVal < max) {
+            change(form, name, currentVal + 1); // increase value by 1
         }
     }
 
-    numberInputField = (formValues) =>{
+    const renderInput = (formValues) => {
         if (formValues.input.value === ""){
-            this.props.change(this.props.form, formValues.input.name, parseInt(formValues.min)); // default value for the field is 0
+            change(form, formValues.input.name, parseInt(formValues.min)); // default value for the field is 0
         }
         return (
             <React.Fragment>
                 <label className="drinkLabel">{formValues.label}</label>
-                <NumberInputField name={formValues.input.name} min={formValues.min} max={formValues.max} formValues={formValues} minus={this.minus} plus={this.plus} />
+                <NumberInputField 
+                    name={formValues.input.name} 
+                    min={formValues.min} 
+                    max={formValues.max} 
+                    formValues={formValues} 
+                    minus={minus} 
+                    plus={plus}
+                />
             </React.Fragment>
         );
-    };  
+    };
+    
+    const card = (item, index) => {
+        return (
+            <Card fluid key={index}>
+                <img
+                    className="drinkImage"
+                    alt="drink" 
+                    src={item.image} 
+                />
+                <Card.Content className="centerText modalCardPadding">
+                    <Card.Header>
+                    <Field 
+                        name={item.item}
+                        label={item.item}
+                        min={min} max={max}
+                        component={renderInput}
+                    />   
+                    <div className="modalPrice">Price: <i className="dollar sign icon currencyPadding"></i>{item.price}</div>
+                    </Card.Header>
+                </Card.Content>
+            </Card>
+        );
+    }
 
-    drinksForm = () => {
-        const { drinks } = this.props;
+    const drinksForm = () => {
         return(
-            <Form className="ui form" onSubmit={this.props.handleSubmit((formValues, dispatch) => this.onSubmit(formValues, dispatch))}>
+            <Form className="ui form" onSubmit={handleSubmit((formValues, dispatch) => onSubmit(formValues, dispatch))}>
                 <Modal.Content>
                     <Header as='h3' block textAlign='center'>Choose your drinks</Header>    
                     <div className="ui doubling stackable centered four column grid cardGroup">
                         {drinks && drinks.map((item, index) => {
                             return (
                                 <div className="column" key={index}>
-                                    <Card fluid key={index}>
-                                        <img
-                                            className="drinkImage"
-                                            alt="drink" 
-                                            src={item.image} 
-                                        />
-                                        <Card.Content className="centerText modalCardPadding">
-                                            <Card.Header>
-                                            
-                                            <Field 
-                                                name={item.item}
-                                                label={item.item}
-                                                min={this.min} max={this.max}
-                                                component={this.numberInputField}
-                                            />   
-                                            <div className="modalPrice">Price: <i className="dollar sign icon currencyPadding"></i>{item.price}</div>
-                                            </Card.Header>
-                                        </Card.Content>
-                                    </Card>
+                                    {card(item, index)}
                                 </div>
                             );
                         })}
@@ -83,13 +93,12 @@ class DrinksForm extends React.Component{
         );
 
     }
-    render(){
-        return(
-            <div className="ui container">
-                {this.drinksForm()}
-            </div>
-        );
-    }
+
+    return(
+        <div className="ui container">
+            {drinksForm()}
+        </div>
+    );
 }
 
 const mapStateToProps = (state, ownProps) => {

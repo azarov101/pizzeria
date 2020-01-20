@@ -5,39 +5,48 @@ import { Form, Field, reduxForm, change } from 'redux-form';
 
 import NumberInputField from '../../common/NumberInputField';
 
-class NumberOfPizzasForm extends React.Component {
+const NumberOfPizzasForm = (props) => {
+    const {onNumberOfPizzasFormSubmit, formProps, form, change, handleSubmit} = props;
+    const min = 1;
+    const max = 5;
 
-    onSubmit = (formValues, dispatch) => {
-        this.props.onNumberOfPizzasFormSubmit(formValues, dispatch);
+    const onSubmit = (formValues, dispatch) => {
+        onNumberOfPizzasFormSubmit(formValues, dispatch);
     }
 
-    minus = () => {
-        const currentVal = this.props.formProps.values.number;
-        if (currentVal > 1) {
-            this.props.change(this.props.form, "number", currentVal - 1 ); // reset form field value
+    const minus = () => {
+        const currentVal = formProps.values.number;
+        if (currentVal > min) {
+            change(form, "number", currentVal - 1 ); // reset form field value
         }
     }
 
-    plus = () => {
-        const currentVal = this.props.formProps.values.number;
-        if (currentVal < 5) {
-            this.props.change(this.props.form, "number", currentVal + 1 ); // reset form field value
+    const plus = () => {
+        const currentVal = formProps.values.number;
+        if (currentVal < max) {
+            change(form, "number", currentVal + 1 ); // reset form field value
         }
     }
 
-    numberInputField = (formValues) =>{
+    const renderInput = (formValues) => {
         if (formValues.input.value === ""){
-            this.props.change(this.props.form, formValues.input.name, formValues.min); // default value for the field
+            change(form, formValues.input.name, formValues.min); // default value for the field
         }
         return (
-            <NumberInputField name={formValues.name} min={formValues.min} max={formValues.max} formValues={formValues} minus={this.minus} plus={this.plus} />
+            <NumberInputField 
+                name={formValues.name} 
+                min={formValues.min} 
+                max={formValues.max} 
+                formValues={formValues} 
+                minus={minus} 
+                plus={plus} 
+            />
         );
     };   
 
-
-    numberOfPizzasForm = () => {
+    const numberOfPizzasForm = () => {
         return(
-            <Form className="ui form" onSubmit={this.props.handleSubmit((formValues, dispatch) => this.onSubmit(formValues, dispatch))}>
+            <Form className="ui form" onSubmit={handleSubmit((formValues, dispatch) => onSubmit(formValues, dispatch))}>
                 <Modal.Content>
                     <Modal.Description>
                         <Header as='h4' textAlign='center' block className="numberOfPizzas">
@@ -45,8 +54,8 @@ class NumberOfPizzasForm extends React.Component {
                             &nbsp;&nbsp;&nbsp;&nbsp;
                             <Field 
                                 name="number"
-                                min={1} max={5}
-                                component={this.numberInputField}
+                                min={min} max={max}
+                                component={renderInput}
                             />                          
                         </Header>          
                     </Modal.Description>
@@ -58,13 +67,11 @@ class NumberOfPizzasForm extends React.Component {
         );
     }
 
-    render(){
-        return (
-            <div className="ui container">
-                {this.numberOfPizzasForm()}
-            </div>
-        );
-    }
+    return (
+        <div className="ui container">
+            {numberOfPizzasForm()}
+        </div>
+    );
 }
 
 const mapStateToProps = (state, ownProps) => {
