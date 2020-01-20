@@ -27,7 +27,6 @@ class NumberOfPizzasForm extends React.Component {
 
     numberInputField = (formValues) =>{
         if (formValues.input.value === ""){
-            debugger;
             this.props.change(this.props.form, formValues.input.name, formValues.min); // default value for the field
         }
         return (

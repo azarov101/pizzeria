@@ -11,7 +11,7 @@ import '../style/style.css';
 
 function App() {
     return(
-        <div className="ui container">
+        <div className="ui container myContainer">
         <BrowserRouter>
         <NavBar/>
         <br />

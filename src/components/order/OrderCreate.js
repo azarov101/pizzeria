@@ -89,7 +89,7 @@ class OrderCreate extends Component {
         return (
             <React.Fragment>
                 <div className="centerText">                
-                    <img alt="delivery" className="deliveryImage" src={deliveryImage} />
+                    <img alt="delivery" className="delivery image" src={deliveryImage} />
                 </div>
                 <h1 className="centerText">Enter Your Details</h1>
                 <br />
