@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { reset } from 'redux-form';
 import _ from 'lodash';
 
-import * as Action from '../../actions';
+import {updateOrderPriceAction, updateTotalPriceAction, addNumberOfPizzasToCartAction,
+    addToppingsToCartAction, updateCurrentPizzaNumberToCartAction, addDrinksToCartAction, closeModalAction} from '../../actions';
 import NumberOfPizzasForm from './forms/NumberOfPizzasForm';
 import ToppingsForm from './forms/ToppingsForm';
 import DrinksForm from './forms/DrinksForm';
@@ -24,7 +25,11 @@ class MainModal extends Component{
                 <Modal.Content>
                     <Modal.Description>
                         <Header as='h1' block textAlign='center'>
-                            <img className="ui image" src="https://p7.hiclipart.com/preview/811/919/777/check-mark-computer-icons-royalty-free-clip-art-blue-check-mark.jpg" alt="added to cart successfully"></img>
+                            <img 
+                                className="ui image"
+                                src="https://p7.hiclipart.com/preview/811/919/777/check-mark-computer-icons-royalty-free-clip-art-blue-check-mark.jpg"
+                                alt="added to cart successfully" 
+                            />
                             <br />
                             Added to Cart Successfully
                         </Header>          
@@ -204,13 +209,16 @@ const mapStateToProps = state => {
      };
 }
 
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         closeModalAction: () => Action.closeModalAction(dispatch),
-//         addNumberOfPizzasToCartAction: (number) => Action.addNumberOfPizzasToCartAction(dispatch, number),
-//         updateCurrentPizzaNumberToCartAction: (number) => Action.updateCurrentPizzaNumberToCartAction(dispatch, number),
-//         addToppingsToCartAction: (item) => Action.addToppingsToCartAction(dispatch, item)
-//     }
-// }
+const mapDispatchToProps = dispatch => {
+    return {
+        updateOrderPriceAction: (price) => updateOrderPriceAction(price)(dispatch),
+        updateTotalPriceAction: (price) => updateTotalPriceAction(price)(dispatch),
+        addNumberOfPizzasToCartAction: (item) => addNumberOfPizzasToCartAction(item)(dispatch),
+        addToppingsToCartAction: (item) => addToppingsToCartAction(item)(dispatch),
+        updateCurrentPizzaNumberToCartAction: (item) => updateCurrentPizzaNumberToCartAction(item)(dispatch),
+        addDrinksToCartAction: (item) => addDrinksToCartAction(item)(dispatch),
+        closeModalAction: (isOrderFinished) => closeModalAction(isOrderFinished)(dispatch)
+    }
+}
 
-export default connect(mapStateToProps, { ...Action })(MainModal);
+export default connect(mapStateToProps, mapDispatchToProps)(MainModal);

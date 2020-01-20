@@ -39,10 +39,10 @@ function ToppingsForm(props) {
                                 <Card fluid>
                                     <img
                                         className="toppingImage"
-                                        alt="topping" 
+                                        alt={item.item} 
                                         src={item.image} 
                                     />
-                                    <Card.Content className="toppingText">
+                                    <Card.Content className="centerText modalCardPadding">
                                         <Card.Header>
                                             <Field 
                                                 name={item.item}
@@ -50,6 +50,7 @@ function ToppingsForm(props) {
                                                 type="checkbox"
                                                 component={renderFormInput}
                                             />   
+                                            <div className="modalPrice">Price: <i className="dollar sign icon currencyPadding"></i>{item.price}</div>
                                         </Card.Header>
                                     </Card.Content>
                                 </Card>

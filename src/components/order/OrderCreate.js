@@ -5,7 +5,7 @@ import { Button } from 'semantic-ui-react';
 import DropdownList from 'react-widgets/lib/DropdownList'
 import 'react-widgets/dist/css/react-widgets.css'
 
-import * as Action from '../../actions';
+import {getCityAction, createOrderAction} from '../../actions';
 import deliveryImage from '../../images/delivery.png';
 
 class OrderCreate extends Component {
@@ -191,7 +191,14 @@ const mapStateToProps = state => {
     });
 }
 
-const formWrapper =  connect(mapStateToProps, {...Action})(OrderCreate); 
+const mapDispatchToProps = dispatch => {
+    return {
+        getCityAction: () => getCityAction()(dispatch),
+        createOrderAction: (order) => createOrderAction(order)(dispatch)
+    }
+}
+
+const formWrapper =  connect(mapStateToProps, mapDispatchToProps)(OrderCreate); 
 
 export default reduxForm({
     form: 'OrderForm'

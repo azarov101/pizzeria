@@ -164,10 +164,6 @@
 
 }
 
-.transition {
-  transition: all 0.3s ease-in-out;
-}
-
 @media screen and ( max-width: 755px) {
   .cartContainer {
     width: 98%;

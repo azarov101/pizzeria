@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import * as Action from '../../actions';
+import {getOrderAction} from '../../actions';
 
 
 class OrderDetails extends Component {
 
     componentDidMount(){
-        // this.props.getOrderListAction();
         this.props.getOrderAction(this.props.match.params.id);
     }
 
@@ -162,7 +161,7 @@ class OrderDetails extends Component {
                     {Object.values(items).map((orderItems, index) => (
                         <div className="row ui very padded segment doubling stackable" key={index}>
                             <div className="four wide column">
-                                <img alt="pizza" src={orderItems.pizzaDescription.image} className="ui image" />
+                                <img alt="pizza" src={orderItems.pizzaDescription.image} className="ui image orderImage" />
                             </div>
                             <div className="twelve wide column">
                                 {this.orderContent(orderItems)}
@@ -192,4 +191,10 @@ const mapStateToProps = (state, ownProps) => {
     return { order: state.order[ownProps.match.params.id] };
 };
 
-export default connect(mapStateToProps, { ...Action })(OrderDetails);
+const mapDispatchToProps = dispatch => {
+    return {
+        getOrderAction: (id) => getOrderAction(id)(dispatch)
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(OrderDetails);

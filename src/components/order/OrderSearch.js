@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Divider, Grid, Segment, Icon, Table } from 'semantic-ui-react';
 import { Field, change, reduxForm } from 'redux-form';
 
-import * as Action from '../../actions';
+import {getOrderListAction} from '../../actions';
 
 class OrderSearch extends Component{
     state = { showAllOrders: false }
@@ -30,7 +30,7 @@ class OrderSearch extends Component{
     }
 
     handleClickButton = () => {
-        this.props.change(this.props.form, "search", ""); // reset form field value
+        this.props.changeAction(this.props.form, "search", ""); // reset form field value
         this.setState({ showAllOrders: true});
     }
 
@@ -116,7 +116,14 @@ const mapStateToProps = (state, ownProps) => {
     };
 }
 
-const formWrapper = connect(mapStateToProps, { ...Action, change })(OrderSearch);
+const mapDispatchToProps = dispatch => {
+    return {
+        getOrderListAction: () => getOrderListAction()(dispatch),
+        changeAction: (formName, fieldName, value) => dispatch(change(formName, fieldName, value))
+    }
+}
+
+const formWrapper = connect(mapStateToProps, mapDispatchToProps)(OrderSearch);
 
 export default reduxForm({
     form: 'SearchOrderByIdForm',

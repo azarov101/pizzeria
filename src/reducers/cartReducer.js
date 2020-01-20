@@ -21,7 +21,7 @@ export default (state = initialState, action) => {
             break;
 
         case ActionType.CLOSE_MODAL:
-            if (payload.orderFinished) {
+            if (payload.isOrderFinished) {
                 newState = {...state, isModalOpen: payload.isModalOpen};
             } else {
                 if (state.totalPrice !== 0){ // clear current order only

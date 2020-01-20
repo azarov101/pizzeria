@@ -58,14 +58,16 @@ class DrinksForm extends React.Component{
                                             alt="drink" 
                                             src={item.image} 
                                         />
-                                        <Card.Content className="centerText">
+                                        <Card.Content className="centerText modalCardPadding">
                                             <Card.Header>
+                                            
                                             <Field 
                                                 name={item.item}
                                                 label={item.item}
                                                 min={this.min} max={this.max}
                                                 component={this.numberInputField}
                                             />   
+                                            <div className="modalPrice">Price: <i className="dollar sign icon currencyPadding"></i>{item.price}</div>
                                             </Card.Header>
                                         </Card.Content>
                                     </Card>

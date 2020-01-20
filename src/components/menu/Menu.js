@@ -2,11 +2,11 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Card, Icon } from 'semantic-ui-react';
 import _ from 'lodash';
-import { Link } from 'react-router-dom';
 
-import * as Action from '../../actions';
+import {getMenuAction, initializeOrderStateAction,
+    addPizzaToCartAction,  openModalAction} from '../../actions';
 import MainModal from './MainModal';
-import ShoppingCart from './ShoppingCart';
+import ShoppingCart from './cart/ShoppingCart';
 
 class Menu extends Component {
     constructor(props){
@@ -101,13 +101,14 @@ const mapStateToProps = state => {
      };
 }
 
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         openModalAction: () => Action.openModalAction(),
-//         getMenuAction: () => Action.getMenuAction(dispatch),
-//         addPizzaToCartAction: (item) => Action.addPizzaToCartAction(dispatch, item)
-//     }
-// }
+const mapDispatchToProps = dispatch => {
+    return {
+        getMenuAction: () => getMenuAction()(dispatch),
+        initializeOrderStateAction: () => initializeOrderStateAction()(dispatch),
+        openModalAction: () => openModalAction()(dispatch),
+        addPizzaToCartAction: (item) => addPizzaToCartAction(item)(dispatch)
+    }
+}
 
 
-export default connect(mapStateToProps, { ...Action })(Menu);
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);

@@ -44,8 +44,8 @@ export const openModalAction = () => dispatch => {
     const action = {type: ActionType.OPEN_MODAL, payload: { isModalOpen: true }};   
     dispatch(action);
 }
-export const closeModalAction = (orderFinished=false) => dispatch => {
-    const payload = { isModalOpen: false, orderFinished };
+export const closeModalAction = (isOrderFinished=false) => dispatch => {
+    const payload = { isModalOpen: false, isOrderFinished };
     const action = {type: ActionType.CLOSE_MODAL, payload };   
     dispatch(action);
 }
