@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 import * as Action from '../../actions';
 import MainModal from './MainModal';
+import ShoppingCart from './ShoppingCart';
 
 class Menu extends Component {
     constructor(props){
@@ -60,7 +61,6 @@ class Menu extends Component {
                                     }
                                     { !item.discountedPrice && item.price }
                                     <Icon name='dollar sign' />
-                                
                                 </span>
                             </Card.Content>
                         </Card>
@@ -70,17 +70,6 @@ class Menu extends Component {
         </div>
     )
 
-    orderButton = () => {
-        if (Object.keys(this.props.cart.order).length > 0) {
-            return (
-                <div>
-                    <br/>
-                    <Link className="ui fluid primary button" to="/order/create">Order Now</Link>
-                </div>
-            );
-        }
-    }
-
     render() {
         return (
             <div>
@@ -88,9 +77,18 @@ class Menu extends Component {
                     <i className="circular utensils icon"></i>
                     Choose Your Pizza
                 </h2>
-                {this.PizzaMenu()}
-                <MainModal />
-                {this.orderButton()}
+                <div className="ui grid">
+                    <div className="row ui doubling stackable">
+                        <div className="twelve wide column">
+                            {this.PizzaMenu()}
+                            {this.PizzaMenu()}
+                            <MainModal />
+                        </div>
+                        <div className="four wide column">
+                            <ShoppingCart />
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }

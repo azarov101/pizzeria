@@ -41,28 +41,31 @@ class MainModal extends Component{
         const { numberOfPizzas, pizzaDescription: { discountedPrice, price }, toppings, drinks } = this.props.cart.order[this.subOrderIndex];    
 
         // update price with old total price
-        let totalPrice = this.props.cart.totalPrice;
+        const totalPrice = this.props.cart.totalPrice;
 
         // update price by amount of pizzas
-        totalPrice += discountedPrice ? (numberOfPizzas * discountedPrice) : (numberOfPizzas * price); 
+        let currentOrderPrice = discountedPrice ? (numberOfPizzas * discountedPrice) : (numberOfPizzas * price); 
 
         // update price by toppings for each pizza
         const toppingsArray = Object.values(toppings);
         for (let i = 0; i < toppingsArray.length; ++i){
             let toppingsObject = Object.values(toppingsArray[i]);
             for (let j = 0; j < toppingsObject.length; ++j){
-                totalPrice += toppingsObject[j].price;
+                currentOrderPrice += toppingsObject[j].price;
             }
         }
 
         // update price by drinks
         const drinksObject = Object.values(drinks);
         for (let i = 0; i < drinksObject.length; ++i){
-            totalPrice += (drinksObject[i].price * drinksObject[i].amount);
+            currentOrderPrice += (drinksObject[i].price * drinksObject[i].amount);
         }
 
-        // save updated total price to cart store
-        this.props.updateTotalPriceAction(totalPrice);
+        // save current order price to cart
+        this.props.updateOrderPriceAction(currentOrderPrice);
+
+        // save updated total price to cart
+        this.props.updateTotalPriceAction(totalPrice + currentOrderPrice);
     }
 
     onNumberOfPizzasFormSubmit = ({ number }, dispatch) => { 
