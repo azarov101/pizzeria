@@ -28,10 +28,22 @@ class OrderDetails extends Component {
                                 <h4 className="header headerColor">Price</h4>
                                 <div className="description">
                                     {orderItems.pizzaDescription.discountedPrice && 
-                                    <div>Discounted Price: 
+                                        <div>Discounted Price: 
+                                            &nbsp; &nbsp;
+                                            <span className="lineThrough"> {orderItems.pizzaDescription.price} </span> &nbsp; => &nbsp; {orderItems.pizzaDescription.discountedPrice}$
+                                        </div>
+                                    }
+                                    {!orderItems.pizzaDescription.discountedPrice &&
+                                        <div>Pizza Price: 
+                                            &nbsp; &nbsp;
+                                            {orderItems.pizzaDescription.price}$
+                                        </div>
+                                    }
+
+                                    <div>Order Price: 
                                         &nbsp; &nbsp;
-                                    <span className="lineThrough"> {orderItems.pizzaDescription.price} </span> &nbsp; => &nbsp; {orderItems.pizzaDescription.discountedPrice}$ </div> }
-                                    {!orderItems.pizzaDescription.discountedPrice && orderItems.pizzaDescription.price + `$`}
+                                        <span className="totalPrice"> {orderItems.orderPrice}$ </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -112,7 +124,7 @@ class OrderDetails extends Component {
                 </div>
                 <div role="listitem" className="item">
                     <div className="iconWidth inlineBlock"><i className="money bill alternate icon"></i></div>
-                    <div className="content inlineBlock"><b>Price: </b>{price}$</div>
+                    <div className="content inlineBlock"><b>Total Price: </b>{price}$</div>
                 </div>
                 <div role="listitem" className="item">
                     <div className="iconWidth inlineBlock"><i className="bell icon"></i></div>
@@ -120,7 +132,7 @@ class OrderDetails extends Component {
                 </div>
                 <div role="listitem" className="item">
                     <div className="iconWidth inlineBlock"> <i className="shipping fast icon"></i></div>
-                    <div className="content inlineBlock"><b>Delivery Location: </b></div><div className="inlineBlock breakWord">{location}</div>
+                    <div className="content inlineBlock"><b>Delivery Location: &nbsp;</b></div><div className="inlineBlock breakWord">{location}</div>
                 </div>
                 {notes && 
                 <div role="listitem" className="item">

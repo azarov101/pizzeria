@@ -50,6 +50,18 @@ export const closeModalAction = (orderFinished=false) => dispatch => {
     dispatch(action);
 }
 
+export const removeFromCartAction = (index) => dispatch => {
+    const payload = index;
+    const action = {type: ActionType.REMOVE_FROM_CART, payload };   
+    dispatch(action);
+}
+
+export const rearrangeCartOrdersAction = (index) => dispatch => {
+    const payload = index; // previous removed order index
+    const action = {type: ActionType.REARRANGE_CART_ORDERS, payload };   
+    dispatch(action);
+}
+
 export const addPizzaToCartAction = item => dispatch => {
     const action = {type: ActionType.ADD_PIZZA_TO_CART, payload: item };   
     dispatch(action);
@@ -74,6 +86,11 @@ export const addToppingsToCartAction = item => dispatch => {
 
 export const addDrinksToCartAction = item => dispatch => {
     const action = { type: ActionType.ADD_DRINKS_TO_CART, payload: item };   
+    dispatch(action);
+}
+
+export const updateOrderPriceAction = price => dispatch => {
+    const action = { type: ActionType.UPDATE_ORDER_PRICE, payload: price };
     dispatch(action);
 }
 

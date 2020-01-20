@@ -1,3 +1,13 @@
+.myContainer{
+    width: 90vw !important;
+}
+
+.myHeader{
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
 /*********** Home ***********/
 .coverImage {
     width: 100%;
@@ -88,7 +98,7 @@
 
 /*********** Order ***********/
 .deliveryImage {
-    width: 75%;
+    width: 50%;
 }
 
 .headerColor {
@@ -105,6 +115,11 @@
 
 .breakWord {
     overflow-wrap: break-word;
+}
+
+.totalPrice {
+    color: #12c8b1;
+    font-weight: bold;
 }
 
 .orderRow {
@@ -198,3 +213,4 @@ input[type="number"] {
     font-weight: bold;
     text-align: center;
   }
+  
