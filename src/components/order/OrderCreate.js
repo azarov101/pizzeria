@@ -52,8 +52,15 @@ class OrderCreate extends Component {
                         placeholder={field.placeholder}
                         />
                 </div>
+                {this.renderError(field.meta)}
           </React.Fragment>
           ); 
+    }
+
+    renderError = ({error, touched}) => {
+        if (error && touched){
+            return <div className="ui error message">{error}</div>;
+        }
     }
 
     renderDropdownList  = field => {
@@ -65,6 +72,7 @@ class OrderCreate extends Component {
                     placeholder={field.placeholder}
                     data={field.data}
                 />
+                {this.renderError(field.meta)}
             </React.Fragment>
         );
     }
@@ -93,7 +101,7 @@ class OrderCreate extends Component {
                 </div>
                 <h1 className="centerText">Enter Your Details</h1>
                 <br />
-                <Form className="ui form" onSubmit={this.props.handleSubmit(this.onSubmit)}>
+                <Form className="ui form error" onSubmit={this.props.handleSubmit(this.onSubmit)}>
                     <div className="fields">
                         <div className="four wide field">
                             <Field 
@@ -183,6 +191,32 @@ class OrderCreate extends Component {
     }
 }
 
+const validate = formValues => {
+    const errors = {};
+    const regex = /^[a-zA-Z-][a-zA-Z- ]*$/; // regular expression for full name field
+
+    if (!formValues.fullName){
+        errors.fullName = "You must enter Full Name";
+    }
+    else if (!regex.test(formValues.fullName)){ // input should contain only letters
+        errors.fullName = "Field can contain only letters";
+    }
+
+    if (!formValues.city){
+        errors.city = "You must enter City";
+    }
+
+    if (!formValues.street){
+        errors.street = "You must enter Street";
+    }
+
+    if (!formValues.number){
+        errors.number = "You must enter Home Number";
+    }
+
+    return errors;
+}
+
 const mapStateToProps = state => {
     return ({
         cart: state.cart,
@@ -201,5 +235,6 @@ const mapDispatchToProps = dispatch => {
 const formWrapper =  connect(mapStateToProps, mapDispatchToProps)(OrderCreate); 
 
 export default reduxForm({
-    form: 'OrderForm'
+    form: 'OrderForm',
+    validate // attach validate function to the form
 })(formWrapper);
