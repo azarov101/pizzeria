@@ -13,7 +13,8 @@ export default (state = initialState, action) => {
 
     switch (type) {
         case ActionType.GET_MENU_LIST:
-            newState = {...state, ...payload};
+            const {pizzaList, toppingList, drinkList} = payload;
+            newState = {...state, pizzas: [...pizzaList], toppings: [...toppingList], drinks: [...drinkList]};
             break;
         default:
             newState = state;

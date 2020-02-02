@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Card, Icon } from 'semantic-ui-react';
-import _ from 'lodash';
 
 import {getMenuAction, initializeOrderStateAction,
     addPizzaToCartAction,  openModalAction} from '../../actions';
@@ -9,10 +8,6 @@ import MainModal from './MainModal';
 import ShoppingCart from './cart/ShoppingCart';
 
 class Menu extends Component {
-    constructor(props){
-        super(props);
-        this.subOrderIndex = 0;
-    }
 
     componentDidMount(){
         this.props.getMenuAction();
@@ -20,8 +15,7 @@ class Menu extends Component {
     }
 
     pizzaClickHandler = item => {
-        this.subOrderIndex = _.keys(this.props.cart.order).length + 1;
-        item = { subOrderIndex: this.subOrderIndex, pizzaDescription: item };
+        item = { pizzaDescription: item };
         this.props.addPizzaToCartAction(item);
         this.props.openModalAction();
     }
@@ -71,6 +65,13 @@ class Menu extends Component {
     )
 
     render() {
+        if (!this.props.menu){
+            return (
+                <div className="ui active transition visible inverted dimmer">
+                    <div className="content"><div className="ui medium text loader">Loading Menu Items</div></div>
+                </div>
+            ); 
+        }
         return (
             <div>
                 <h2 className="ui center aligned icon header">
@@ -97,7 +98,6 @@ class Menu extends Component {
 const mapStateToProps = state => {
     return { 
         menu: state.menu.pizzas,
-        cart: state.cart
      };
 }
 
@@ -109,6 +109,5 @@ const mapDispatchToProps = dispatch => {
         addPizzaToCartAction: (item) => addPizzaToCartAction(item)(dispatch)
     }
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(Menu);

@@ -21,7 +21,7 @@ export default function CartToppings(props){
 
         return (
             <React.Fragment>
-                {Object.values(toppings).map((topping, toppingIndex) => {
+                {toppings.map((topping, toppingIndex) => {
                     if (toppingIndex === numOfToppings-1){
                         return (topping.item);
                     } 
@@ -33,13 +33,13 @@ export default function CartToppings(props){
 
     return (
         <React.Fragment>
-            {order.toppings && Object.values(order.toppings).map((toppings, pizzaIndex) => { 
-                let numOfToppings = Object.values(toppings).length;
+            {order.toppings && order.toppings.map((toppings, pizzaIndex) => { 
+                let numOfToppings = toppings.toppings.length;
                 
                 return (
                     <p className="cartP" key={pizzaIndex}>
                         <span className="underLine">{order.numberOfPizzas > 1 && "Pizza #" + (pizzaIndex + 1) + ": "}</span>
-                        {showToppings(numOfToppings, toppings)}
+                        {showToppings(numOfToppings, toppings.toppings)}
                     </p>
                 );
             })}

@@ -65,15 +65,15 @@ class OrderDetails extends Component {
                                 <div className="content">
                                     <h4 className="header headerColor">Toppings</h4>
                                     <div className="description">
-                                        {Object.values(orderItems.toppings).map((toppings, pizzaIndex) => { 
-                                            let numOfToppings = Object.values(toppings).length;
+                                        {orderItems.toppings && orderItems.toppings.map((toppings, pizzaIndex) => { 
+                                            let numOfToppings = toppings.toppings.length;
                                             return (
                                                 <li key={pizzaIndex}>{orderItems.numberOfPizzas > 1 && "Pizza #" + (pizzaIndex + 1) + ": "}
-                                                    {Object.values(toppings).map((topping, toppingIndex) => {
+                                                    {toppings.toppings.map((topping, toppingIndex) => {
                                                         if (toppingIndex === numOfToppings-1){
-                                                            return (topping.item);
+                                                            return (topping.item || topping);
                                                         } 
-                                                        return (`${topping.item}, `);                                              
+                                                        return (`${topping.item || topping}, `);                                              
                                                     })}
                                                     {numOfToppings === 0 && `No toppings`}
                                                 </li>
@@ -109,7 +109,7 @@ class OrderDetails extends Component {
     }
 
     orderInformation = () => {
-        const { id, name, price, status, location, notes } = this.props.order;
+        const { orderId: id, name, totalPrice: price, status, location, notes } = this.props.order;
 
         return (
             <div role="list" className="ui divided middle aligned list">
@@ -148,6 +148,7 @@ class OrderDetails extends Component {
 
     showOrderDetails = () => {
         const { items } = this.props.order;
+
         return (
             <React.Fragment>
                 <br />
@@ -158,7 +159,7 @@ class OrderDetails extends Component {
                 
                 <h4>Order Details</h4>
                 <div className="ui grid">
-                    {Object.values(items).map((orderItems, index) => (
+                    {items.map((orderItems, index) => (
                         <div className="row ui very padded segment doubling stackable" key={index}>
                             <div className="four wide column">
                                 <img alt="pizza" src={orderItems.pizzaDescription.image} className="ui image orderImage" />
@@ -174,11 +175,20 @@ class OrderDetails extends Component {
     }
 
     render(){
-        if (!this.props.order){
+        const {order, orderList} = this.props;
+
+        if (Object.keys(orderList).length === 0 && !order){
             return (
                 <div>Loading</div>
             );
         }
+         
+        else if (Object.keys(orderList)[0] === 'null'){
+            return (
+                <div>Order not found!</div>
+            );
+        }
+
         return (
             <div>
                 {this.showOrderDetails()}
@@ -188,7 +198,10 @@ class OrderDetails extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    return { order: state.order[ownProps.match.params.id] };
+    return { 
+        order: state.order.orderList[ownProps.match.params.id],
+        orderList: state.order.orderList
+     };
 };
 
 const mapDispatchToProps = dispatch => {

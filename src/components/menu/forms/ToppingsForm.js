@@ -6,8 +6,10 @@ const ToppingsForm = (props) => {
     const {toppings, order, onToppingsFormSubmit, handleSubmit} = props;
 
     const onSubmit = (formValues, dispatch) => {
-        onToppingsFormSubmit(formValues, dispatch);
+        onToppingsFormSubmit(formValues, currentPizza, dispatch);
     }
+
+    const currentPizza = order.toppings ? order.toppings.length  + 1 : 1;
 
     const renderFormInput = field => {
         return (
@@ -51,7 +53,7 @@ const ToppingsForm = (props) => {
                     <Header as='h3' block textAlign='center'>
                         {order && 
                             ((order.numberOfPizzas === 1 && `Choose toppings for the pizza`) ||
-                            (order.numberOfPizzas > 1 && `Choose toppings for Pizza #${order.currentPizza}`))
+                            (order.numberOfPizzas > 1 && `Choose toppings for Pizza #${currentPizza}`))
                         }
                     </Header>    
                     <div className="ui doubling stackable centered four column grid cardGroup">

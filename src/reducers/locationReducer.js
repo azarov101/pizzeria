@@ -7,11 +7,12 @@ const initialState = {
 
 export default (state = initialState, action) => {
     const { type, payload } = action;
-    let newState;
+    let newState, updatedState;
 
     switch (type) {
         case ActionType.GET_CITY_LIST:
-            newState = { ...state, city: payload };
+            updatedState = Object.values(payload.cityList).map(val => (val.city));
+            newState = { ...state, city: updatedState };
             break;
         default:
             newState = state;

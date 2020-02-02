@@ -8,7 +8,6 @@ import CartOrders from './CartOrders';
 const ShoppingCart = (props) => {
 
     const cart = () => {
-        const {order: orders} = props.cart;
 
         return (
             <div className="cartContainer">
@@ -26,7 +25,7 @@ const ShoppingCart = (props) => {
                             <div className="col">Drinks</div>
                             <div className="col col-total">Total</div>
                         </div>
-                        <CartOrders orders={orders} />      
+                        <CartOrders />      
                         <div className="tf">
                             <div className="row layout-inline">
                                 <div className="col col-remove"></div>
@@ -44,7 +43,7 @@ const ShoppingCart = (props) => {
     }
 
     const orderButton = () => {
-        if (Object.keys(props.cart.order).length > 0) {
+        if (props.cart.order.length > 0) {
             return (
                 <Link className="ui button orderButton" to="/order/create">Order Now</Link>
             );

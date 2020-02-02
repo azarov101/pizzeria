@@ -5,18 +5,26 @@ import { Button } from 'semantic-ui-react';
 import DropdownList from 'react-widgets/lib/DropdownList'
 import 'react-widgets/dist/css/react-widgets.css'
 
-import {getCityAction, createOrderAction} from '../../actions';
+import {getCityAction, createOrderAction, getOrderAction} from '../../actions';
 import deliveryImage from '../../images/delivery.png';
 
 class OrderCreate extends Component {
+    constructor(props){
+        super(props);
+        this.state = { isOrderCreated: false };
+    }
 
     componentDidMount(){
         this.props.getCityAction();
     }
 
-    componentWillUnmount(){
-        if (this.state && this.state.interval){
-            clearInterval(this.state.interval);
+    componentDidUpdate(){
+        if (this.props.order.lastOrder.requestStatus) {
+            if (this.props.order.lastOrder.requestStatus === 'Success'){
+                this.props.history.push(`/order/${this.props.order.lastOrder.orderId}`);
+            } else {
+                // else status == Failure -> show message // new component
+            }
         }
     }
 
@@ -25,19 +33,14 @@ class OrderCreate extends Component {
 
         const order = {
             name: formValues.fullName,
-            price: totalPrice,
+            totalPrice: totalPrice,
             location: `${formValues.city}, ${formValues.street} ${formValues.number}`,
             notes: formValues.notes,
             status: "Delivered",
             items: items
         };
-        this.props.createOrderAction(order);
-
-        // set interval for 2 seconds before redirect to order page
-        let interval = setInterval(() => {
-                this.props.history.push(`/order/${Object.keys(this.props.order)}`)
-            }, 2000);
-        this.setState({interval: interval});
+        this.props.createOrderAction(order);   
+        this.setState({isOrderCreated: true});     
     }
 
     renderFormInput = field => {
@@ -176,6 +179,15 @@ class OrderCreate extends Component {
             );
         }
 
+        // show loading
+        if (this.state.isOrderCreated){
+            return (
+                <div className="ui active transition visible inverted dimmer">
+                    <div className="content"><div className="ui medium text loader">Saving Order</div></div>
+                </div>
+            );
+        }
+
         // there is an order - redirect to order page
         if (Object.values(this.props.order).length === 1){
             return (
@@ -228,7 +240,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getCityAction: () => getCityAction()(dispatch),
-        createOrderAction: (order) => createOrderAction(order)(dispatch)
+        createOrderAction: (order) => createOrderAction(order)(dispatch),
+        getOrderAction: (id) => getOrderAction(id)(dispatch)
     }
 }
 

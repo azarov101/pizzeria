@@ -9,13 +9,13 @@ export default function CartDrinks(props){
     const {order} = props;
 
     const showDrinks = () => {
-        if (Object.values(order.drinks).length === 0) {
+        if (order.drinks.length === 0) {
             return <p className="cartP">No drinks</p>
         }
 
         return (
             <React.Fragment>
-                {Object.values(order.drinks).map((drink, index) => {
+                {order.drinks.map((drink, index) => {
                     return (
                         <p className="cartP" key={index}>
                             {`${drink.item} x ${drink.amount}`}

@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { Modal, Header, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { reset } from 'redux-form';
-import _ from 'lodash';
 
 import {updateOrderPriceAction, updateTotalPriceAction, addNumberOfPizzasToCartAction,
     addToppingsToCartAction, updateCurrentPizzaNumberToCartAction, addDrinksToCartAction, closeModalAction} from '../../actions';
@@ -13,11 +12,12 @@ import DrinksForm from './forms/DrinksForm';
 class MainModal extends Component{
     constructor(props){
         super(props);
-        this.subOrderIndex = 0;
         this.state = { 
             step: 1
         };
     }
+
+    currentOrderIndex = () => (this.props.cart.order.length - 1);
 
     addedToCartMessage = () => {
         return (
@@ -36,14 +36,14 @@ class MainModal extends Component{
                     </Modal.Description>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button className="ui primary button" onClick={this.HandleButtonClick}>Finish</Button>
+                    <Button className="ui primary button" onClick={this.onFormFinish}>Finish</Button>
                 </Modal.Actions>
             </React.Fragment>
         );
     }
 
     updateTotalPrice = () => {
-        const { numberOfPizzas, pizzaDescription: { discountedPrice, price }, toppings, drinks } = this.props.cart.order[this.subOrderIndex];    
+        const { numberOfPizzas, pizzaDescription: { discountedPrice, price }, toppings, drinks } = this.props.cart.order[this.currentOrderIndex()];    
 
         // update price with old total price
         const totalPrice = this.props.cart.totalPrice;
@@ -52,18 +52,16 @@ class MainModal extends Component{
         let currentOrderPrice = discountedPrice ? (numberOfPizzas * discountedPrice) : (numberOfPizzas * price); 
 
         // update price by toppings for each pizza
-        const toppingsArray = Object.values(toppings);
-        for (let i = 0; i < toppingsArray.length; ++i){
-            let toppingsObject = Object.values(toppingsArray[i]);
-            for (let j = 0; j < toppingsObject.length; ++j){
-                currentOrderPrice += toppingsObject[j].price;
+        for (let i = 0; i < toppings.length; ++i){
+            let toppingsArray = toppings[i].toppings;
+            for (let j = 0; j < toppingsArray.length; ++j){
+                currentOrderPrice += toppingsArray[j].price;
             }
         }
 
         // update price by drinks
-        const drinksObject = Object.values(drinks);
-        for (let i = 0; i < drinksObject.length; ++i){
-            currentOrderPrice += (drinksObject[i].price * drinksObject[i].amount);
+        for (let i = 0; i < drinks.length; ++i){
+            currentOrderPrice += (drinks[i].price * drinks[i].amount);
         }
 
         // save current order price to cart
@@ -74,88 +72,38 @@ class MainModal extends Component{
     }
 
     onNumberOfPizzasFormSubmit = ({ number }, dispatch) => { 
-        this.subOrderIndex = _.keys(this.props.cart.order).length;
-
-        this.props.addNumberOfPizzasToCartAction({subOrderIndex: this.subOrderIndex, numberOfPizzas: number});
-
+        this.props.addNumberOfPizzasToCartAction(number);
         dispatch(reset("NumberOfPizzasForm")); // clear form field
-        this.HandleButtonClick();
+        this.setState({step: this.state.step + 1}); // update to next step
     };
 
-    onToppingsFormSubmit = (formValues, dispatch) => { 
+    onToppingsFormSubmit = (formValues, currentPizza, dispatch) => { 
         let filteredValues = Object.keys(formValues).filter(val => formValues[val]); // take only the checked fields
         filteredValues = this.props.toppings.filter(val => filteredValues.includes(val.item)); // map values to have all toppings info from store
-        filteredValues = _.mapValues(filteredValues); // convert array to object
-        
-        const toppingsIndex = this.props.cart.order[this.subOrderIndex].currentPizza;
 
-        filteredValues = {
-            subOrderIndex: this.subOrderIndex,
-            itemsIndex: toppingsIndex,
-            items: { ...filteredValues }
-        };  
-
-        this.props.addToppingsToCartAction(filteredValues);
-
-        filteredValues = {
-            subOrderIndex: this.subOrderIndex,
-            index: toppingsIndex + 1,
-        };  
-        this.props.updateCurrentPizzaNumberToCartAction(filteredValues);
+        this.props.addToppingsToCartAction({toppings: filteredValues});
 
         dispatch(reset("ToppingsForm")); // clear form fields 
-        this.HandleButtonClick();
+        if (currentPizza === this.props.cart.order[this.currentOrderIndex()].numberOfPizzas){
+            this.setState({step: this.state.step + 1}); // update state to next step 
+        }
     };
 
     onDrinksFormSubmit = (formValues, dispatch) => { 
         let filteredValues = Object.keys(formValues).filter(val => formValues[val] > 0); // take only the fields that has at least 1 drink
         filteredValues = this.props.drinks.filter(val => filteredValues.includes(val.item)); // map values to have all drinks info from store
         filteredValues.map(val => val.amount = formValues[val.item]); // add order amount for each drink
-        filteredValues = _.mapValues(filteredValues); // convert array to object
-
-        filteredValues = {
-            subOrderIndex: this.subOrderIndex,
-            items: { ...filteredValues }
-        };  
-
+ 
         this.props.addDrinksToCartAction(filteredValues);
 
         dispatch(reset("DrinksForm")); // clear form fields 
-        this.HandleButtonClick();
+        this.setState({step: this.state.step + 1});
     };
 
-    HandleButtonClick = () => {
-        if (this.state.step === 1){
-            this.setState({step: this.state.step + 1}); // update state to next step  
-        } 
-        
-        else if (this.state.step === 2){
-            const toppingIndex = this.props.cart.order[this.subOrderIndex].currentPizza;
-
-            if (toppingIndex === this.props.cart.order[this.subOrderIndex].numberOfPizzas){ // done with all the toppings
-                this.setState({step: this.state.step + 1}); // update state to next step 
-                
-                if (toppingIndex !== 1) // save ACTION call if there is only 1 pizza
-                {
-                    // reset current pizza number for the drinks step        
-                    const values = {
-                        subOrderIndex: this.subOrderIndex,
-                        index: 1
-                    };  
-                    this.props.updateCurrentPizzaNumberToCartAction(values); 
-                }
-            }          
-        } 
-        
-        else if (this.state.step === 3){
-            this.setState({step: this.state.step + 1}); // update state to next step  
-        } 
-
-        else if (this.state.step === 4){
-            this.updateTotalPrice();
-            this.props.closeModalAction(true);
-            this.setState({step:  1}); // reset the state of step
-        }
+    onFormFinish = () => {
+        this.updateTotalPrice();
+        this.props.closeModalAction(true);
+        this.setState({step: 1}); // reset the state of step
     }
 
     closeModal = () => {
@@ -168,7 +116,7 @@ class MainModal extends Component{
             case 1: 
                 return <NumberOfPizzasForm onNumberOfPizzasFormSubmit={this.onNumberOfPizzasFormSubmit} />
             case 2: 
-                return <ToppingsForm toppings={this.props.toppings} order={this.props.cart.order[this.subOrderIndex]} onToppingsFormSubmit={this.onToppingsFormSubmit} />
+                return <ToppingsForm toppings={this.props.toppings} order={this.props.cart.order[this.currentOrderIndex()]} onToppingsFormSubmit={this.onToppingsFormSubmit} />
             case 3: 
                 return <DrinksForm drinks={this.props.drinks} onDrinksFormSubmit={this.onDrinksFormSubmit} />
             case 4:
@@ -189,7 +137,6 @@ class MainModal extends Component{
                 {this.ModalContent()}
             </Modal>
         );
-    
     }
     
     render() {

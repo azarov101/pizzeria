@@ -6,7 +6,7 @@ import CartToppings from './CartToppings';
 import CartDrinks from './CartDrinks';
 
 function CartOrders(props) {
-    const {orders} = props;
+    const { orders } = props;
     const rowStyle = "layout-inline row";
     const oddRowStyle = " row-bg2";
     let currentRowStyle = "";
@@ -20,7 +20,7 @@ function CartOrders(props) {
         return(
             <React.Fragment>
                 <div className="col-remove removeRow">
-                    <i className="times circle icon" onClick={() => removeCartItemHandler(rowIndex+1)}></i>
+                    <i className="times circle icon" onClick={() => removeCartItemHandler(rowIndex)}></i>
                 </div>
                 <div className="col layout-inline">
                     <img className="pizzaCartImg" src={order.pizzaDescription.image} alt={order.pizzaDescription.item} />
@@ -40,7 +40,7 @@ function CartOrders(props) {
 
     return (
         <React.Fragment>
-            {Object.keys(orders).length > 0 && Object.values(orders).map((order, index) => {
+            {orders.length > 0 && orders.map((order, index) => {
                 currentRowStyle = index % 2 ? rowStyle + oddRowStyle : rowStyle;
 
                 return (
@@ -54,6 +54,12 @@ function CartOrders(props) {
         
 }
 
+const mapStateToProps = state => {
+    return { 
+        orders: state.cart.order
+     };
+}
+
 const mapDispatchToProps = dispatch => {
     return {
         removeFromCartAction: (index) => removeFromCartAction(index)(dispatch),
@@ -61,4 +67,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(CartOrders);
+export default connect(mapStateToProps, mapDispatchToProps)(CartOrders);

@@ -62,7 +62,7 @@ class OrderSearch extends Component{
         let orders =  [ ...order ];
 
         if (form.values) { // search by id
-            orders = orders.filter(order => order.id.toString().startsWith(form.values.search));
+            orders = orders.filter(order => order.orderId.toString().startsWith(form.values.search));
         }
  
         return (
@@ -78,10 +78,10 @@ class OrderSearch extends Component{
             
                 <Table.Body>
                     {orders && orders.map((order) => (
-                        <Table.Row className="orderRow" key={order.id} onClick={() => this.props.history.push(`/order/${order.id}`)}>
-                            <Table.Cell>{order.id}</Table.Cell>
+                        <Table.Row className="orderRow" key={order.orderId} onClick={() => this.props.history.push(`/order/${order.orderId}`)}>
+                            <Table.Cell>{order.orderId}</Table.Cell>
                             <Table.Cell>{order.name}</Table.Cell>
-                            <Table.Cell>{order.price}$</Table.Cell>
+                            <Table.Cell>{order.totalPrice}$</Table.Cell>
                             <Table.Cell>{order.status}</Table.Cell>
                         </Table.Row>
                     ))}
@@ -111,7 +111,7 @@ class OrderSearch extends Component{
 
 const mapStateToProps = (state, ownProps) => {
     return { 
-        order: Object.values(state.order),
+        order: Object.values(state.order.orderList),
         formProps: state.form[ownProps.form]
     };
 }
