@@ -4,42 +4,42 @@ import ActionType from './constants';
 // **************************** Server & Store Actions **************************** //
 // GET List of all item in menu
 export const getMenuAction = () => async dispatch => {
-    // const response = await jsonServer.get("/menu");
-    const response = await menu.get("/getMenu");
+    // const response = await jsonServer.get("/menu"); // json-server
+    const response = await menu.get("/getMenu"); // menu microservice
 
     dispatch({ type: ActionType.GET_MENU_LIST, payload: response.data });
 };
 
 // GET List of cities
 export const getCityAction = () => async dispatch => {
-    // const response = await jsonServer.get("/city");
-    const response = await location.get("/getCityList");
+    // const response = await jsonServer.get("/city"); // json-server
+    const response = await location.get("/getCityList"); // location microservice
 
     dispatch({ type: ActionType.GET_CITY_LIST, payload: response.data });
 };
 
 // GET Order by id
 export const getOrderAction = id => async dispatch => {
-    // let response = await jsonServer.get(`/order/${id}`);
+    // let response = await jsonServer.get(`/order/${id}`); // json-server
     // response.data.orderId = response.data.id; // uncomment for json server
-    const response = await order.get(`/getOrderDetails/${id}`);
+    const response = await order.get(`/getOrderDetails/${id}`); // order microservice
 
     dispatch({ type: ActionType.GET_ORDER, payload: response.data });
 };
 
 // GET List of all the orders
 export const getOrderListAction = () => async dispatch => {
-    // const response = await jsonServer.get("/order");
-    const response = await order.get("/getAllOrders");
+    // const response = await jsonServer.get("/order"); // json-server
+    const response = await order.get("/getAllOrders"); // order microservice
 
     dispatch({ type: ActionType.GET_ORDER_LIST, payload: response.data });
 };
 
 // POST new Order
 export const createOrderAction = formValues => async dispatch => {
-    let response = await jsonServer.post("/order", formValues);
-    response.data = {orderId: response.data.id, requestStatus: "Success"}; // uncomment for json server
-    // const response = await order.post('/createOrder', formValues);
+    // let response = await jsonServer.post("/order", formValues); // json-server
+    // response.data = {orderId: response.data.id, requestStatus: "Success"}; // uncomment for json server
+    const response = await order.post('/createOrder', formValues); // order microservice
     
     dispatch({ type: ActionType.CREATE_ORDER, payload: response.data });
 };
