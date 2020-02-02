@@ -1,4 +1,15 @@
-Site for pizza ordering using react-redux as front-end
+## Description
+Site for pizza ordering using react-redux as front-end.
+
+## Backend
+There are two backend projects for this project (choose only one):
+1) Simple Json Server.
+2) Four Microservices.
+
+in order to run json-server, go to src/action/index.js and uncomment the relevant api request.
+link to backend: https://github.com/azarov101/pizzeria-backend
+
+---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
